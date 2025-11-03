@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小林弱网参数生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .params-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .params-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .open-params {
+            border-left: 5px solid #4CAF50;
+            background-color: #f1f8e9;
+        }
+        
+        .close-params {
+            border-left: 5px solid #F44336;
+            background-color: #ffebee;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .param-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+        }
+        
+        .param-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .param-value {
+            font-size: 1.1rem;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .param-desc {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .generate-btn-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .protocol-section {
+            padding: 20px;
+            background-color: #e3f2fd;
+            margin: 20px;
+            border-radius: 8px;
+        }
+        
+        .protocol-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .protocol-option {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        @media (max-width: 768px) {
+            .params-container {
+                flex-direction: column;
+            }
+            
+            .params-section {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>小林弱网参数生成器</h1>
+            <p class="description">生成用于模拟弱网环境的参数配置，优化低延迟和瞬移效果</p>
+        </header>
+        
+        <div class="highlight">
+            <strong>主要参数目标：</strong> 低延迟、延迟枪瞬移
+        </div>
+        
+        <div class="params-container">
+            <div class="params-section open-params">
+                <h2>开启弱网参数</h2>
+                <div id="open-params-list">
+                    <!-- 开启参数将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <div class="params-section close-params">
+                <h2>关闭弱网参数</h2>
+                <div id="close-params-list">
+                    <!-- 关闭参数将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="protocol-section">
+            <h2>弱网控制协议</h2>
+            <div class="protocol-options">
+                <div class="protocol-option">
+                    <div class="param-name">QUIC</div>
+                    <div class="param-desc">Google开发，改善HTTP/3的弱网性能</div>
+                </div>
+                <div class="protocol-option">
+                    <div class="param-name">FEC</div>
+                    <div class="param-desc">前向纠错，通过冗余数据减少丢包影响</div>
+                </div>
+                <div class="protocol-option">
+                    <div class="param-name">ARQ</div>
+                    <div class="param-desc">自动重传请求，如TCP的重传机制</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="generate-btn-container">
+            <button class="generate-btn" id="generate-btn">生成参数</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generate-btn');
+            const openParamsList = document.getElementById('open-params-list');
+            const closeParamsList = document.getElementById('close-params-list');
+            
+            // 参数定义
+            const paramDefinitions = {
+                // 上行参数
+                'up_delay': {
+                    name: '上行延时',
+                    desc: '数据从用户设备发送到服务器所需的时间(单位:毫秒ms)。例如:你在游戏中开一枪的数据上传到服务器后在;到其他玩家的设备上的时间',
+                    openRange: [20, 100], // 开启时的范围
+                    closeRange: [2, 20]  // 关闭时的范围
+                },
+                'up_jitter': {
+                    name: '上行延时抖动',
+                    desc: '上行延时的波动程度。抖动越大，网络越不稳定(如游戏中前进来回闪现抖动)。',
+                    openRange: [4, 186], // 已修改为4-186 ms
+                    closeRange: [0, 0]   // 已修改为0 ms
+                },
+                'up_bandwidth': {
+                    name: '上行带宽',
+                    desc: '用户设备上传数据的最大速率(单位: Mbps/Kbps)，数据上传最大速度。',
+                    openRange: [1, 3], // 已修改为1-3 Mbps
+                    closeRange: [120, 160] // 已修改为120-160 Mbps
+                },
+                'up_random_loss': {
+                    name: '上行随机丢包',
+                    desc: '用户设备上传数据的随机丢包率(0-100%)。',
+                    openRange: [0, 0], // 已修改为0%
+                    closeRange: [0, 0] // 已修改为0%
+                },
+                'up_continuous_pass': {
+                    name: '上行连续丢包（放行）',
+                    desc: '模拟连续放行若干数据包(不丢包)，用于截断数据后恢复传输。',
+                    openRange: [0, 0], // 已修改为0个包
+                    closeRange: [0, 0] // 已修改为0个包
+                },
+                'up_continuous_loss': {
+                    name: '上行连续丢包（丢包）',
+                    desc: '模拟连续丢失若干数据包，测试极端弱网下的表现(如游戏网络卡顿)。',
+                    openRange: [0, 0], // 已修改为0个包
+                    closeRange: [0, 0] // 已修改为0个包
+                },
+                // 下行参数
+                'down_delay': {
+                    name: '下行延时',
+                    desc: '数据从服务器传到用户设备的时间，例如:其他玩家的行为传到你设备上的时间。',
+                    openRange: [40, 100], // 已修改为40-100 ms
+                    closeRange: [0, 0] // 已修改为0 ms
+                },
+                'down_jitter': {
+                    name: '下行抖动',
+                    desc: '下行延时的波动。高抖动会导致游戏卡顿、游戏延迟跳变。',
+                    openRange: [4, 60], // 已修改为4-60 ms
+                    closeRange: [0, 0] // 已修改为0 ms
+                },
+                'down_bandwidth': {
+                    name: '下行带宽',
+                    desc: '用户下载数据的最大速率。影响视频缓冲、数据到本地的速度。',
+                    openRange: [3000, 6050], // 已修改为3000-6050 Mbps
+                    closeRange: [0, 0] // 已修改为0 Mbps
+                },
+                'down_random_loss': {
+                    name: '下行随机丢包',
+                    desc: '下行数据包随机丢失的概率。例如:网络随机卡顿。',
+                    openRange: [0, 0], // 已修改为0%
+                    closeRange: [0, 0] // 已修改为0%
+                },
+                'down_continuous_pass': {
+                    name: '下行连续丢包（放行）',
+                    desc: '模拟下行通道中连续放行数据包。',
+                    openRange: [1000, 1000], // 已修改为1000-1000个包（固定值）
+                    closeRange: [0, 0] // 已修改为0个包
+                },
+                'down_continuous_loss': {
+                    name: '下行连续丢包（丢包）',
+                    desc: '模拟连续丢包，直接连续截停数据到本地设备。',
+                    openRange: [0, 0], // 已修改为0个包
+                    closeRange: [0, 0] // 已修改为0个包
+                }
+            };
+            
+            // 生成随机数函数
+            function getRandomValue(range, isInteger = false) {
+                const min = range[0];
+                const max = range[1];
+                // 如果范围是[0,0]，直接返回0
+                if (min === 0 && max === 0) {
+                    return 0;
+                }
+                // 如果范围是[min,min]，直接返回min（固定值）
+                if (min === max) {
+                    return min;
+                }
+                const value = Math.random() * (max - min) + min;
+                return isInteger ? Math.round(value) : parseFloat(value.toFixed(2));
+            }
+            
+            // 生成参数HTML
+            function generateParamHTML(paramKey, paramConfig, isOpen) {
+                const range = isOpen ? paramConfig.openRange : paramConfig.closeRange;
+                let value;
+                
+                // 根据参数类型生成不同的值，但不再添加单位
+                if (paramKey.includes('delay') || paramKey.includes('jitter') || 
+                    paramKey.includes('bandwidth') || paramKey.includes('loss') || 
+                    paramKey.includes('random_loss') || paramKey.includes('continuous_pass') || 
+                    paramKey.includes('continuous_loss')) {
+                    value = getRandomValue(range, true);
+                } else {
+                    value = getRandomValue(range, true);
+                }
+                
+                return `
+                    <div class="param-item">
+                        <div class="param-name">${paramConfig.name}</div>
+                        <div class="param-value">${value}</div>
+                        <div class="param-desc">${paramConfig.desc}</div>
+                    </div>
+                `;
+            }
+            
+            // 生成所有参数
+            function generateAllParams() {
+                let openHTML = '';
+                let closeHTML = '';
+                
+                for (const paramKey in paramDefinitions) {
+                    openHTML += generateParamHTML(paramKey, paramDefinitions[paramKey], true);
+                    closeHTML += generateParamHTML(paramKey, paramDefinitions[paramKey], false);
+                }
+                
+                openParamsList.innerHTML = openHTML;
+                closeParamsList.innerHTML = closeHTML;
+            }
+            
+            // 初始生成参数
+            generateAllParams();
+            
+            // 按钮点击事件
+            generateBtn.addEventListener('click', generateAllParams);
+        });
+    </script>
+</body>
+</html>
